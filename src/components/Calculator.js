@@ -3,24 +3,27 @@ import "./styles/style.css";
 const Calculator = () => {
   const [currentOperand, setCurrentOperand] = useState("");
   const [previousOperand, setPreviousOperand] = useState("");
+  const [allOperands, setAllOperands] = useState("");
   const [input, setInput] = useState("0");
   const [operator, setOperator] = useState(null);
   const [calculation, setCalculation] = useState("");
-  const [total, setTotal] = useState(false);
+  const [disable, setDisable] = useState(false);
+  const [dot, setDot] = useState(false);
   function addDigits(e) {
     setInput("");
     let val = e.target.innerText;
-    if (total) {
-      setPreviousOperand("");
+    if (previousOperand) {
+      setInput("");
+      setPreviousOperand((prev) => prev + val);
+    } else {
+      setPreviousOperand(val);
     }
-    previousOperand
-      ? setPreviousOperand((prev) => prev + val)
-      : setPreviousOperand(val);
 
-    setTotal(false);
     if (operator !== null) {
+      setInput("");
       setPreviousOperand(previousOperand);
       if (currentOperand) {
+        setInput("");
         setCurrentOperand((prev) => prev + val);
       } else {
         setCurrentOperand(val);
@@ -33,12 +36,17 @@ const Calculator = () => {
   }, [previousOperand]);
 
   useEffect(() => {
+    setInput("");
     setCurrentOperand(currentOperand);
   }, [currentOperand]);
 
   useEffect(() => {
-    setInput("0");
-  }, []);
+    if (currentOperand === "" && operator === null && previousOperand === "") {
+      setInput("0");
+    } else {
+      setInput("");
+    }
+  });
   function operation(e) {
     if (previousOperand !== "") {
       setInput("");
@@ -46,24 +54,28 @@ const Calculator = () => {
       setOperator(e.target.innerText);
       setPreviousOperand(previousOperand);
     }
-
-    setTotal(false);
   }
-  function deleteDigits(e) {
-    setInput("");
-    setPreviousOperand(previousOperand.slice(0, previousOperand.length - 1));
+  function deleteDigits() {
+    if (currentOperand !== "") {
+      setCurrentOperand(currentOperand.slice(0, currentOperand.length - 1));
+    } else if (operator !== null && currentOperand === "") {
+      setOperator(operator.slice(0, operator.length - 1));
+    } else {
+      setPreviousOperand(previousOperand.slice(0, previousOperand.length - 1));
+    }
   }
   function clearDigits() {
     setCurrentOperand("");
     setPreviousOperand("");
     setCalculation("");
     setOperator(null);
+    setDisable(false);
     setInput("0");
   }
 
   function calculate(e) {
+    setInput("");
     if (e?.target.innerText === "=") {
-      setTotal(true);
       let calc;
       switch (operator) {
         case "/":
@@ -90,6 +102,9 @@ const Calculator = () => {
           return;
       }
       setCalculation(calc);
+      setDisable(true);
+      setAllOperands(previousOperand + operator + currentOperand);
+      console.log(allOperands);
     }
   }
 
@@ -100,55 +115,57 @@ const Calculator = () => {
           <div className="operands">
             {input} {previousOperand} {operator} {currentOperand}
           </div>
-          <div className="result">{calculation}</div>
+          <div className="result">{calculation} </div>
         </div>
         <button onClick={clearDigits} className="span">
           AC
         </button>
-        <button onClick={deleteDigits}>Del</button>
-        <button onClick={operation} className="operand">
+        <button disabled={disable} onClick={deleteDigits}>
+          Del
+        </button>
+        <button disabled={disable} onClick={operation} className="operand">
           /
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           1
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           2
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           3
         </button>
-        <button onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation} className="operand">
           *
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           4
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           5
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           6
         </button>
-        <button onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation} className="operand">
           +
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           7
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           8
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           9
         </button>
-        <button onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation} className="operand">
           -
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           .
         </button>
-        <button onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits} className="operand">
           0
         </button>
         <button onClick={calculate} className="operand span">
