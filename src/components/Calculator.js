@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles/style.css";
+import sound from "./styles/vibration.mp3";
 const Calculator = () => {
   //setting all the states
   const [currentOperand, setCurrentOperand] = useState("");
@@ -39,7 +40,11 @@ const Calculator = () => {
       setDot(true);
     }
   }, [currentOperand]);
-
+  //adding sounds
+  let audio = new Audio(sound);
+  const vibration = () => {
+    audio.play();
+  };
   // function for getting operands
   function addDigits(e) {
     let val = e.target.innerText;
@@ -57,6 +62,7 @@ const Calculator = () => {
         setCurrentOperand(val);
       }
     }
+    vibration();
   }
   // function for getting operators
   function operation(e) {
@@ -109,6 +115,11 @@ const Calculator = () => {
             parseFloat(previousOperand) - parseFloat(currentOperand)
           );
           break;
+        case "%":
+          calc = String(
+            parseFloat(previousOperand) % parseFloat(currentOperand)
+          );
+          break;
         default:
           return;
       }
@@ -122,10 +133,12 @@ const Calculator = () => {
     <div className="calcultor-container">
       <div className="calc-grid">
         <div className="display-output">
-          <div className="operands">
-            {input} {previousOperand} {operator} {currentOperand}
+          <div className="inner-display">
+            <div className="operands">
+              {input} {previousOperand} {operator} {currentOperand}
+            </div>
+            <div className="result">{calculation} </div>
           </div>
-          <div className="result">{calculation} </div>
         </div>
         <button onClick={clearDigits} className="span">
           AC
@@ -133,54 +146,55 @@ const Calculator = () => {
         <button disabled={disable} onClick={deleteDigits}>
           Del
         </button>
-        <button disabled={disable} onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation}>
           /
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           1
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           2
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           3
         </button>
-        <button disabled={disable} onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation}>
           *
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           4
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           5
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           6
         </button>
-        <button disabled={disable} onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation}>
           +
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           7
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           8
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           9
         </button>
-        <button disabled={disable} onClick={operation} className="operand">
+        <button disabled={disable} onClick={operation}>
           -
         </button>
-        <button disabled={dot} onClick={addDigits} className="operand">
+        <button disabled={dot} onClick={addDigits}>
           .
         </button>
-        <button disabled={disable} onClick={addDigits} className="operand">
+        <button disabled={disable} onClick={addDigits}>
           0
         </button>
-        <button onClick={calculate} className="operand span">
-          =
+        <button disabled={disable} onClick={operation}>
+          %
         </button>
+        <button onClick={calculate}>=</button>
       </div>
     </div>
   );
