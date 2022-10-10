@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./styles/style.css";
 import sound from "./styles/vibration.mp3";
+import sound2 from "./styles/vibration2.mp3";
 const Calculator = () => {
   //setting all the states
   const [currentOperand, setCurrentOperand] = useState("");
@@ -42,8 +43,12 @@ const Calculator = () => {
   }, [currentOperand]);
   //adding sounds
   let audio = new Audio(sound);
-  const vibration = () => {
+  let audio2 = new Audio(sound2);
+  const operandsVibration = () => {
     audio.play();
+  };
+  const operatorsVibration = () => {
+    audio2.play();
   };
   // function for getting operands
   function addDigits(e) {
@@ -62,13 +67,14 @@ const Calculator = () => {
         setCurrentOperand(val);
       }
     }
-    vibration();
+    operandsVibration();
   }
   // function for getting operators
   function operation(e) {
     if (previousOperand !== "") {
       setOperator(e.target.innerText);
     }
+    operatorsVibration();
   }
   //function for deleting states // still having bugs //will figure it out
   function deleteDigits() {
@@ -81,6 +87,7 @@ const Calculator = () => {
     if (operator !== null && currentOperand === "") {
       setOperator(operator.slice(0, operator.length - 1));
     }
+    operatorsVibration();
   }
   //function for clearing the states
   function clearDigits() {
@@ -89,6 +96,7 @@ const Calculator = () => {
     setCalculation("");
     setOperator(null);
     setDisable(false);
+    operatorsVibration();
   }
   ///function to do the calculations
   function calculate(e) {
@@ -127,6 +135,7 @@ const Calculator = () => {
       setDisable(true);
       setDot(true);
     }
+    operatorsVibration();
   }
 
   return (
