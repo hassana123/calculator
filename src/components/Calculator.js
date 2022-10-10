@@ -109,6 +109,11 @@ const Calculator = () => {
             parseFloat(previousOperand) - parseFloat(currentOperand)
           );
           break;
+       case "%":
+          calc = String(
+            parseFloat(previousOperand) % parseFloat(currentOperand)
+          );
+          break; 
         default:
           return;
       }
@@ -178,7 +183,10 @@ const Calculator = () => {
         <button disabled={disable} onClick={addDigits} className="operand">
           0
         </button>
-        <button onClick={calculate} className="operand span">
+        <button disabled={disable} onClick={operation} className="operand">
+          %
+        </button>
+        <button onClick={calculate} className="operand">
           =
         </button>
       </div>
